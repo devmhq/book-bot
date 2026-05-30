@@ -1,0 +1,173 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BusinessPlan {
+  FREE
+  STARTER
+  GROWTH
+  PRO
+}
+
+enum BusinessUserRole {
+  OWNER
+  STAFF
+}
+
+enum Channel {
+  WIDGET
+  WHATSAPP
+  SMS
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  BOOKED
+  LOST
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum FollowUpStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Business {
+  id               String          @id @default(uuid())
+  slug             String          @unique
+  email            String
+  phone            String
+  whatsappPhoneId  String?
+  plan             BusinessPlan   @default(FREE)
+  isActive         Boolean        @default(true)
+  users            BusinessUser[]
+  config           BusinessConfig?
+  knowledgeChunks  KnowledgeChunk[]
+  leads            Lead[]
+  conversations    Conversation[]
+  bookings         Booking[]
+  followUps        FollowUp[]
+  calendarToken    CalendarToken?
+  subscription     Subscription?
+}
+
+model BusinessUser {
+  id           String       @id @default(uuid())
+  businessId   String
+  email        String
+  passwordHash String
+  role         BusinessUserRole @default(STAFF)
+  loginAttempts Int @default(0)
+  lockedUntil  DateTime?
+  business     Business   @relation(fields: [businessId], references: [id])
+}
+
+model BusinessConfig {
+  id            String   @id @default(uuid())
+  businessId    String   @unique
+  systemPrompt  String?
+  welcomeMessage String
+  collectName   Boolean @default(true)
+  collectPhone  Boolean @default(true)
+  collectEmail  Boolean @default(true)
+  workingHours  Json
+  timezone      String @default("UTC")
+  business      Business @relation(fields: [businessId], references: [id])
+}
+
+model KnowledgeChunk {
+  id          String   @id @default(uuid())
+  businessId  String
+  content     String
+  embedding   Unsupported("vector(1536)")
+  source      String
+  business    Business @relation(fields: [businessId], references: [id])
+}
+
+model Lead {
+  id         String   @id @default(uuid())
+  businessId String
+  name       String?
+  phone      String?
+  email      String?
+  waId       String?
+  channel    Channel
+  status     LeadStatus @default(NEW)
+  notes      String?
+  business   Business @relation(fields: [businessId], references: [id])
+  conversations Conversation[]
+  bookings   Booking[]
+  followUps  FollowUp[]
+}
+
+model Conversation {
+  id          String   @id @default(uuid())
+  leadId      String
+  businessId  String
+  channel     Channel
+  history     Json
+  lead        Lead @relation(fields: [leadId], references: [id])
+  business    Business @relation(fields: [businessId], references: [id])
+}
+
+model Booking {
+  id               String   @id @default(uuid())
+  leadId           String
+  businessId       String
+  calcomBookingId  String?
+  calcomEventId    String?
+  googleEventId    String?
+  startTime        DateTime
+  endTime          DateTime
+  status           BookingStatus @default(PENDING)
+  notes            String?
+  lead             Lead @relation(fields: [leadId], references: [id])
+  business         Business @relation(fields: [businessId], references: [id])
+}
+
+model FollowUp {
+  id          String   @id @default(uuid())
+  leadId      String
+  businessId  String
+  channel     Channel
+  message     String
+  scheduledAt DateTime
+  sentAt      DateTime?
+  status      FollowUpStatus @default(PENDING)
+  lead        Lead @relation(fields: [leadId], references: [id])
+  business    Business @relation(fields: [businessId], references: [id])
+}
+
+model CalendarToken {
+  id           String   @id @default(uuid())
+  businessId   String   @unique
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  business     Business @relation(fields: [businessId], references: [id])
+}
+
+model Subscription {
+  id               String   @id @default(uuid())
+  businessId       String   @unique
+  lsSubscriptionId String
+  lsCustomerId     String
+  lsVariantId      String
+  status           String
+  currentPeriodEnd DateTime
+  business         Business @relation(fields: [businessId], references: [id])
+}
