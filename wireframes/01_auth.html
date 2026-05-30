@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookBot — Auth Wireframes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0f0f11;color:#e8e6f0;min-height:100vh;padding:40px 24px}
+.page-label{font-family:'DM Mono',monospace;font-size:11px;color:#6b6880;letter-spacing:.12em;text-transform:uppercase;margin-bottom:32px}
+.screens{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1100px;margin:0 auto}
+.screen{background:#16151a;border:1px solid #2a2830;border-radius:16px;overflow:hidden}
+.screen-label{font-family:'DM Mono',monospace;font-size:10px;color:#6b6880;letter-spacing:.1em;padding:12px 16px;border-bottom:1px solid #1e1c24;background:#121117}
+.screen-body{padding:40px 32px}
+.logo{display:flex;align-items:center;gap:8px;margin-bottom:40px}
+.logo-mark{width:32px;height:32px;background:#6c5ce7;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff}
+.logo-text{font-size:15px;font-weight:600;color:#e8e6f0}
+h2{font-size:22px;font-weight:600;color:#f0eeff;margin-bottom:6px}
+.subtitle{font-size:13px;color:#7a7890;margin-bottom:28px}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:12px;font-weight:500;color:#9896a8;margin-bottom:6px;letter-spacing:.02em}
+input{width:100%;background:#1e1c26;border:1px solid #2e2c3a;border-radius:8px;padding:10px 14px;font-size:13px;color:#e8e6f0;font-family:'DM Sans',sans-serif;outline:none}
+input:focus{border-color:#6c5ce7}
+input::placeholder{color:#45434f}
+.btn-primary{width:100%;background:#6c5ce7;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif}
+.btn-primary:hover{background:#7d6ef5}
+.divider{display:flex;align-items:center;gap:10px;margin:20px 0}
+.divider-line{flex:1;height:1px;background:#2a2830}
+.divider-text{font-size:11px;color:#55535f}
+.btn-google{width:100%;background:#1e1c26;border:1px solid #2e2c3a;border-radius:8px;padding:10px;font-size:13px;color:#c8c6d8;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'DM Sans',sans-serif}
+.switch-link{text-align:center;margin-top:20px;font-size:12px;color:#7a7890}
+.switch-link a{color:#9b8cf5;text-decoration:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-hint{font-size:11px;color:#55535f;margin-top:4px}
+.error-msg{background:#2a1a1a;border:1px solid #5a2020;border-radius:6px;padding:8px 12px;font-size:12px;color:#e88080;margin-bottom:16px}
+</style>
+</head>
+<body>
+<p class="page-label" style="text-align:center">BookBot — Screen 01 / Auth</p>
+<div class="screens">
+
+  <!-- LOGIN -->
+  <div class="screen">
+    <div class="screen-label">01-A · Login page</div>
+    <div class="screen-body">
+      <div class="logo">
+        <div class="logo-mark">B</div>
+        <span class="logo-text">BookBot</span>
+      </div>
+      <h2>Welcome back</h2>
+      <p class="subtitle">Sign in to your business account</p>
+      <div class="error-msg">Invalid email or password. Please try again.</div>
+      <div class="form-group">
+        <label>Email address</label>
+        <input type="email" placeholder="you@yourbusiness.com" value="owner@glowsalon.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" value="••••••••••">
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:4px">
+        <a href="#" style="font-size:12px;color:#9b8cf5;text-decoration:none">Forgot password?</a>
+      </div>
+      <button class="btn-primary">Sign in</button>
+      <p class="switch-link">No account? <a href="#">Create one free</a></p>
+    </div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div class="screen">
+    <div class="screen-label">01-B · Signup page</div>
+    <div class="screen-body">
+      <div class="logo">
+        <div class="logo-mark">B</div>
+        <span class="logo-text">BookBot</span>
+      </div>
+      <h2>Create your account</h2>
+      <p class="subtitle">Set up your AI assistant in minutes</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First name</label>
+          <input type="text" placeholder="Ayesha">
+        </div>
+        <div class="form-group">
+          <label>Last name</label>
+          <input type="text" placeholder="Noor">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Business name</label>
+        <input type="text" placeholder="Glow Salon & Spa">
+        <p class="field-hint">This appears in your AI widget</p>
+      </div>
+      <div class="form-group">
+        <label>Work email</label>
+        <input type="email" placeholder="you@yourbusiness.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Min. 8 characters">
+      </div>
+      <button class="btn-primary">Create free account</button>
+      <p class="switch-link" style="margin-top:14px">Already have an account? <a href="#">Sign in</a></p>
+      <p style="font-size:11px;color:#45434f;text-align:center;margin-top:12px">By creating an account you agree to our Terms of Service and Privacy Policy</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

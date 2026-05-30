@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookBot — Widget & WhatsApp</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0f0f11;color:#e8e6f0;min-height:100vh;padding:32px 20px}
+.page-label{font-family:'DM Mono',monospace;font-size:11px;color:#6b6880;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px;text-align:center}
+.screens{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto 32px}
+.screen{background:#16151a;border:1px solid #2a2830;border-radius:16px;overflow:hidden}
+.screen-label{font-family:'DM Mono',monospace;font-size:10px;color:#6b6880;letter-spacing:.1em;padding:10px 16px;border-bottom:1px solid #1e1c24;background:#121117}
+.screen-body{padding:20px}
+/* Fake website */
+.fake-site{background:#1a1820;border-radius:10px;padding:14px;position:relative;min-height:300px}
+.fake-nav{background:#111014;border-radius:6px;height:28px;display:flex;align-items:center;gap:10px;padding:0 10px;margin-bottom:14px}
+.fake-nav-dot{width:18px;height:4px;background:#2a2830;border-radius:2px}
+.fake-hero{background:#111014;border-radius:6px;height:80px;margin-bottom:10px;display:flex;align-items:center;justify-content:center}
+.fake-hero p{font-size:10px;color:#45434f}
+.fake-content{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.fake-block{background:#111014;border-radius:5px;height:50px}
+/* Widget states */
+.widget-bubble{position:absolute;bottom:14px;right:14px;width:48px;height:48px;background:#6c5ce7;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(108,92,231,.5);cursor:pointer;font-size:20px}
+.widget-window{position:absolute;bottom:70px;right:14px;width:260px;background:#16151a;border:1px solid #2a2830;border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.widget-header{background:#6c5ce7;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.widget-avatar{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.widget-name{font-size:12px;font-weight:600;color:#fff}
+.widget-status{font-size:10px;color:rgba(255,255,255,.7)}
+.widget-body{padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
+.bot-msg{background:#1e1c26;border-radius:8px 8px 8px 2px;padding:7px 9px;max-width:88%}
+.bot-msg p{font-size:11px;color:#c8c6d8;line-height:1.4}
+.user-msg{background:#6c5ce7;border-radius:8px 8px 2px 8px;padding:7px 9px;max-width:88%;align-self:flex-end}
+.user-msg p{font-size:11px;color:#fff}
+.widget-footer{padding:8px 10px;border-top:1px solid #1e1c24;display:flex;gap:6px;align-items:center}
+.widget-input{flex:1;background:#111014;border:1px solid #1e1c24;border-radius:6px;padding:6px 8px;font-size:11px;color:#7a7890;font-family:'DM Sans',sans-serif}
+.widget-send{width:28px;height:28px;background:#6c5ce7;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;flex-shrink:0}
+.widget-branding{text-align:center;padding:4px;font-size:9px;color:#45434f}
+/* Slot picker */
+.slot-pills{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.slot-pill{background:#1e1c30;border:1px solid #3a3660;border-radius:6px;padding:5px 8px;font-size:11px;color:#9b8cf5;cursor:pointer}
+.slot-pill.selected{background:#6c5ce7;border-color:#6c5ce7;color:#fff}
+/* Lead form */
+.lead-form{background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:8px;margin-top:6px}
+.lead-form input{width:100%;background:#111014;border:1px solid #1e1c24;border-radius:5px;padding:5px 8px;font-size:10px;color:#c8c6d8;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:5px}
+.lead-form input::placeholder{color:#45434f}
+.lead-form-btn{width:100%;background:#6c5ce7;border:none;border-radius:5px;padding:5px;font-size:10px;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* WhatsApp mockup */
+.wa-phone{background:#111014;border:2px solid #2a2830;border-radius:20px;padding:8px;width:220px;margin:0 auto}
+.wa-notch{width:60px;height:6px;background:#2a2830;border-radius:3px;margin:0 auto 8px}
+.wa-header{background:#1a2e22;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.wa-avatar{width:28px;height:28px;border-radius:50%;background:#5dcaa5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#0a2010;flex-shrink:0}
+.wa-biz-name{font-size:11px;font-weight:600;color:#5dcaa5}
+.wa-biz-sub{font-size:9px;color:#3a6a4a}
+.wa-body{padding:6px;min-height:180px;display:flex;flex-direction:column;gap:6px;background:#0e1a12;border-radius:8px;margin-bottom:4px}
+.wa-msg-in{background:#1a2e22;border-radius:8px 8px 8px 2px;padding:6px 8px;max-width:85%}
+.wa-msg-in p{font-size:10px;color:#a0d4b4;line-height:1.4}
+.wa-msg-out{background:#1a3a22;border-radius:8px 8px 2px 8px;padding:6px 8px;max-width:85%;align-self:flex-end}
+.wa-msg-out p{font-size:10px;color:#c8f0d8}
+.wa-time{font-size:8px;color:#3a5a3a;margin-top:2px;text-align:right}
+.wa-input{background:#1a2e22;border-radius:8px;padding:6px 8px;display:flex;gap:6px;align-items:center}
+.wa-input-field{flex:1;font-size:10px;color:#3a6a4a}
+.wa-send{width:22px;height:22px;background:#5dcaa5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+</style>
+</head>
+<body>
+<p class="page-label">BookBot — Screen 05 / Widget States & WhatsApp</p>
+<div class="screens">
+
+  <!-- WIDGET: CLOSED -->
+  <div class="screen">
+    <div class="screen-label">05-A · Widget — bubble (closed state)</div>
+    <div class="screen-body">
+      <div class="fake-site">
+        <div class="fake-nav">
+          <div class="fake-nav-dot"></div>
+          <div class="fake-nav-dot" style="width:30px"></div>
+          <div class="fake-nav-dot" style="width:24px"></div>
+          <div class="fake-nav-dot" style="width:20px;margin-left:auto"></div>
+        </div>
+        <div class="fake-hero"><p>Business website content</p></div>
+        <div class="fake-content">
+          <div class="fake-block"></div>
+          <div class="fake-block"></div>
+        </div>
+        <div class="fake-block" style="height:30px;margin-bottom:8px"></div>
+        <div class="widget-bubble">💬</div>
+      </div>
+      <div style="margin-top:12px;background:#1a1820;border:1px solid #2a2830;border-radius:8px;padding:10px">
+        <p style="font-size:10px;color:#55535f;font-family:'DM Mono',monospace;margin-bottom:6px">EMBED CODE</p>
+        <p style="font-size:10px;color:#9b8cf5;font-family:'DM Mono',monospace;line-height:1.7">&lt;script<br>&nbsp;src="/widget.js"<br>&nbsp;data-business="glow-salon"<br>&gt;&lt;/script&gt;</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIDGET: Q&A CHAT -->
+  <div class="screen">
+    <div class="screen-label">05-B · Widget — Q&A conversation</div>
+    <div class="screen-body">
+      <div class="fake-site" style="min-height:340px">
+        <div class="fake-nav" style="margin-bottom:8px">
+          <div class="fake-nav-dot"></div><div class="fake-nav-dot" style="width:30px"></div>
+        </div>
+        <div class="fake-block" style="height:30px;margin-bottom:8px"></div>
+        <div class="widget-window">
+          <div class="widget-header">
+            <div class="widget-avatar">B</div>
+            <div><p class="widget-name">Bella — AI Assistant</p><p class="widget-status">✦ Online now</p></div>
+            <div style="margin-left:auto;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer">✕</div>
+          </div>
+          <div class="widget-body">
+            <div class="bot-msg"><p>Hi! I'm Bella 👋 I can answer questions about our services or help you book an appointment. What would you like to know?</p></div>
+            <div class="user-msg"><p>What's the price for balayage?</p></div>
+            <div class="bot-msg"><p>Balayage starts at Rs. 8,000 for partial and Rs. 12,000 for full head (with toner). Would you like to book an appointment?</p></div>
+            <div class="user-msg"><p>Yes please!</p></div>
+            <div class="bot-msg"><p>Great! What's your name?</p></div>
+          </div>
+          <div class="widget-footer">
+            <input class="widget-input" placeholder="Type a message...">
+            <div class="widget-send">→</div>
+          </div>
+          <p class="widget-branding">Powered by BookBot</p>
+        </div>
+        <div class="widget-bubble" style="bottom:14px">💬</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIDGET: BOOKING FLOW -->
+  <div class="screen">
+    <div class="screen-label">05-C · Widget — booking slot picker</div>
+    <div class="screen-body">
+      <div class="fake-site" style="min-height:340px">
+        <div class="fake-nav" style="margin-bottom:8px">
+          <div class="fake-nav-dot"></div><div class="fake-nav-dot" style="width:30px"></div>
+        </div>
+        <div class="fake-block" style="height:30px;margin-bottom:8px"></div>
+        <div class="widget-window">
+          <div class="widget-header">
+            <div class="widget-avatar">B</div>
+            <div><p class="widget-name">Bella — AI Assistant</p><p class="widget-status">✦ Online now</p></div>
+          </div>
+          <div class="widget-body">
+            <div class="user-msg"><p>I need a haircut Saturday</p></div>
+            <div class="bot-msg">
+              <p>Saturday slots available — pick a time:</p>
+              <div class="slot-pills">
+                <div class="slot-pill">10:00 AM — with Sarah</div>
+                <div class="slot-pill selected">12:30 PM — with James</div>
+                <div class="slot-pill">3:00 PM — with Sarah</div>
+              </div>
+            </div>
+            <div class="bot-msg">
+              <p>Great choice! To confirm, I need your details:</p>
+              <div class="lead-form">
+                <input placeholder="Your name" value="Ayesha Noor">
+                <input placeholder="Phone number" value="0300-1234567">
+                <button class="lead-form-btn">Confirm booking →</button>
+              </div>
+            </div>
+          </div>
+          <div class="widget-footer">
+            <input class="widget-input" placeholder="Type a message...">
+            <div class="widget-send">→</div>
+          </div>
+          <p class="widget-branding">Powered by BookBot</p>
+        </div>
+        <div class="widget-bubble" style="bottom:14px">💬</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WHATSAPP ROW -->
+<div style="max-width:1200px;margin:0 auto">
+  <p style="font-family:'DM Mono',monospace;font-size:11px;color:#6b6880;letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;text-align:center">WhatsApp Channel</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+
+    <!-- WA: Q&A -->
+    <div class="screen">
+      <div class="screen-label">05-D · WhatsApp — Q&A</div>
+      <div class="screen-body" style="display:flex;justify-content:center">
+        <div class="wa-phone">
+          <div class="wa-notch"></div>
+          <div class="wa-header">
+            <div class="wa-avatar">GS</div>
+            <div><p class="wa-biz-name">Glow Salon</p><p class="wa-biz-sub">Business account ✓</p></div>
+          </div>
+          <div class="wa-body">
+            <div class="wa-msg-in"><p>Hi, do you do home service?</p><p class="wa-time">2:12 PM</p></div>
+            <div class="wa-msg-out"><p>Yes! We offer home service within DHA and Gulberg only. Minimum booking is Rs. 3,000. Would you like to schedule one?</p><p class="wa-time">2:12 PM ✓✓</p></div>
+            <div class="wa-msg-in"><p>Yes please, this Saturday</p><p class="wa-time">2:13 PM</p></div>
+            <div class="wa-msg-out"><p>Here are Saturday slots for home service in DHA:</p><p style="margin-top:4px;font-size:9px;color:#5dcaa5">• 11:00 AM<br>• 2:00 PM<br>• 4:30 PM</p><p style="margin-top:4px;font-size:10px;color:#c8f0d8">Which time works for you?</p><p class="wa-time">2:13 PM ✓✓</p></div>
+          </div>
+          <div class="wa-input">
+            <span class="wa-input-field">Message...</span>
+            <div class="wa-send">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WA: BOOKING CONFIRM -->
+    <div class="screen">
+      <div class="screen-label">05-E · WhatsApp — booking confirmation</div>
+      <div class="screen-body" style="display:flex;justify-content:center">
+        <div class="wa-phone">
+          <div class="wa-notch"></div>
+          <div class="wa-header">
+            <div class="wa-avatar">GS</div>
+            <div><p class="wa-biz-name">Glow Salon</p><p class="wa-biz-sub">Business account ✓</p></div>
+          </div>
+          <div class="wa-body">
+            <div class="wa-msg-in"><p>2:00 PM works!</p><p class="wa-time">2:14 PM</p></div>
+            <div class="wa-msg-out"><p>What's your name please?</p><p class="wa-time">2:14 PM ✓✓</p></div>
+            <div class="wa-msg-in"><p>Ayesha Noor</p><p class="wa-time">2:14 PM</p></div>
+            <div class="wa-msg-out">
+              <p style="color:#5dcaa5;font-weight:500">✓ Booking confirmed!</p>
+              <p style="margin-top:4px;font-size:10px;color:#c8f0d8;line-height:1.5">📅 Saturday, June 7<br>🕑 2:00 PM<br>📍 DHA home service<br>💇 Haircut (ladies)</p>
+              <p style="margin-top:6px;font-size:9px;color:#5dcaa5">You'll receive a reminder 24hrs before.</p>
+              <p class="wa-time">2:14 PM ✓✓</p>
+            </div>
+          </div>
+          <div class="wa-input">
+            <span class="wa-input-field">Message...</span>
+            <div class="wa-send">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WA: FOLLOW-UP REMINDER -->
+    <div class="screen">
+      <div class="screen-label">05-F · WhatsApp — automated reminder</div>
+      <div class="screen-body" style="display:flex;justify-content:center">
+        <div class="wa-phone">
+          <div class="wa-notch"></div>
+          <div class="wa-header">
+            <div class="wa-avatar">GS</div>
+            <div><p class="wa-biz-name">Glow Salon</p><p class="wa-biz-sub">Business account ✓</p></div>
+          </div>
+          <div class="wa-body" style="justify-content:flex-end">
+            <div style="background:#1a2a18;border-radius:6px;padding:5px 7px;margin-bottom:8px;text-align:center">
+              <p style="font-size:8px;color:#3a6a3a">Friday, June 6</p>
+            </div>
+            <div class="wa-msg-out">
+              <p style="color:#f0c070;font-weight:500;font-size:10px">⏰ Appointment reminder</p>
+              <p style="margin-top:4px;font-size:10px;color:#c8f0d8;line-height:1.5">Hi Ayesha! Your appointment at Glow Salon is <strong>tomorrow, Saturday at 2:00 PM</strong>.</p>
+              <p style="margin-top:5px;font-size:9px;color:#5dcaa5">Reply CONFIRM to confirm or CANCEL to cancel.</p>
+              <p class="wa-time">9:00 AM ✓✓</p>
+            </div>
+            <div class="wa-msg-in"><p>CONFIRM</p><p class="wa-time">9:03 AM</p></div>
+            <div class="wa-msg-out"><p>Thanks! We'll see you tomorrow at 2:00 PM 😊</p><p class="wa-time">9:03 AM ✓✓</p></div>
+          </div>
+          <div class="wa-input">
+            <span class="wa-input-field">Message...</span>
+            <div class="wa-send">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

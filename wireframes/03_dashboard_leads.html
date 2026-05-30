@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookBot — Dashboard Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0f0f11;color:#e8e6f0;min-height:100vh;padding:32px 20px}
+.page-label{font-family:'DM Mono',monospace;font-size:11px;color:#6b6880;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px;text-align:center}
+.screen{background:#16151a;border:1px solid #2a2830;border-radius:16px;overflow:hidden;max-width:1200px;margin:0 auto 32px}
+.screen-label{font-family:'DM Mono',monospace;font-size:10px;color:#6b6880;letter-spacing:.1em;padding:10px 16px;border-bottom:1px solid #1e1c24;background:#121117}
+.app-shell{display:grid;grid-template-columns:200px 1fr;min-height:540px}
+/* Sidebar */
+.sidebar{background:#111014;border-right:1px solid #1e1c24;padding:16px 0}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 16px 16px;border-bottom:1px solid #1e1c24;margin-bottom:8px}
+.logo-mark{width:28px;height:28px;background:#6c5ce7;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:#e8e6f0}
+.nav-section{padding:8px 0}
+.nav-label{font-size:10px;color:#45434f;font-family:'DM Mono',monospace;letter-spacing:.1em;padding:4px 16px 6px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:12px;color:#7a7890;cursor:pointer}
+.nav-item:hover{background:#1a1820;color:#c8c6d8}
+.nav-item.active{background:#1e1c30;color:#9b8cf5;border-right:2px solid #6c5ce7}
+.nav-icon{width:14px;height:14px;border-radius:3px;background:#2e2c3a;flex-shrink:0}
+.nav-icon.active{background:#6c5ce7}
+.sidebar-footer{padding:12px 16px;border-top:1px solid #1e1c24;margin-top:auto}
+.business-badge{display:flex;align-items:center;gap:8px}
+.biz-avatar{width:28px;height:28px;border-radius:6px;background:#2a1f4a;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#9b8cf5}
+.biz-name{font-size:11px;color:#9896a8}
+/* Main */
+.main{padding:24px}
+.main-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.page-title{font-size:18px;font-weight:600;color:#f0eeff}
+.page-sub{font-size:12px;color:#7a7890;margin-top:2px}
+.btn-primary{background:#6c5ce7;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:500;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* Metric cards */
+.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.metric{background:#1a1820;border:1px solid #2a2830;border-radius:10px;padding:14px}
+.metric-label{font-size:11px;color:#55535f;margin-bottom:6px}
+.metric-value{font-size:24px;font-weight:600;color:#f0eeff;font-family:'DM Mono',monospace}
+.metric-delta{font-size:11px;margin-top:4px}
+.delta-up{color:#5dcaa5}
+.delta-down{color:#f0997b}
+/* Chart placeholder */
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+.chart-card{background:#1a1820;border:1px solid #2a2830;border-radius:10px;padding:14px}
+.chart-title{font-size:12px;font-weight:500;color:#9896a8;margin-bottom:12px}
+.chart-placeholder{background:#111014;border-radius:6px;height:120px;display:flex;align-items:flex-end;gap:4px;padding:10px 8px;overflow:hidden}
+.bar{border-radius:3px 3px 0 0;flex:1}
+.donut-placeholder{background:#111014;border-radius:50%;width:80px;height:80px;margin:0 auto;border:12px solid #2a2830;position:relative}
+.donut-placeholder::after{content:'';position:absolute;top:-12px;left:-12px;width:80px;height:80px;border-radius:50%;border:12px solid transparent;border-top-color:#6c5ce7;border-right-color:#6c5ce7}
+.legend{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#7a7890}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* Recent leads */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:12px;font-weight:500;color:#9896a8;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace}
+.see-all{font-size:11px;color:#9b8cf5;cursor:pointer}
+.lead-list{display:flex;flex-direction:column;gap:6px}
+.lead-row{background:#111014;border:1px solid #1e1c24;border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.lead-avatar{width:30px;height:30px;border-radius:50%;background:#2a1f4a;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#9b8cf5;flex-shrink:0}
+.lead-name{font-size:12px;font-weight:500;color:#e8e6f0}
+.lead-sub{font-size:11px;color:#55535f}
+.lead-meta{margin-left:auto;display:flex;align-items:center;gap:8px}
+.badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500}
+.badge-widget{background:#2a1f4a;color:#9b8cf5}
+.badge-wa{background:#1a2e22;color:#5dcaa5}
+.badge-new{background:#1a2040;color:#7aabf5}
+.badge-booked{background:#1a2e22;color:#5dcaa5}
+.badge-pending{background:#2e2010;color:#f0c070}
+.time{font-size:10px;color:#45434f;font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<p class="page-label">BookBot — Screen 03 / Main Dashboard</p>
+
+<div class="screen">
+  <div class="screen-label">03-A · Dashboard home — overview</div>
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">B</div>
+        <span class="logo-text">BookBot</span>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <div class="nav-item active"><div class="nav-icon active"></div>Overview</div>
+        <div class="nav-item"><div class="nav-icon"></div>Leads</div>
+        <div class="nav-item"><div class="nav-icon"></div>Bookings</div>
+        <div class="nav-item"><div class="nav-icon"></div>Analytics</div>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Configure</p>
+        <div class="nav-item"><div class="nav-icon"></div>AI Settings</div>
+        <div class="nav-item"><div class="nav-icon"></div>Calendar</div>
+        <div class="nav-item"><div class="nav-icon"></div>WhatsApp</div>
+        <div class="nav-item"><div class="nav-icon"></div>Embed Code</div>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Account</p>
+        <div class="nav-item"><div class="nav-icon"></div>Billing</div>
+        <div class="nav-item"><div class="nav-icon"></div>Settings</div>
+      </div>
+      <div style="padding:12px 16px;margin-top:16px;border-top:1px solid #1e1c24">
+        <div class="business-badge">
+          <div class="biz-avatar">GS</div>
+          <div>
+            <p class="biz-name" style="color:#c8c6d8;font-size:11px;font-weight:500">Glow Salon</p>
+            <p class="biz-name" style="font-size:10px">Starter plan</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="main-header">
+        <div>
+          <p class="page-title">Good morning, Ayesha 👋</p>
+          <p class="page-sub">Here's what's happening today</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="background:#1a1820;border:1px solid #2a2830;border-radius:8px;padding:7px 12px;font-size:11px;color:#7a7890;display:flex;align-items:center;gap:6px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#5dcaa5"></div>
+            Widget live
+          </div>
+          <button class="btn-primary">+ Share widget</button>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric">
+          <p class="metric-label">Conversations today</p>
+          <p class="metric-value">24</p>
+          <p class="metric-delta delta-up">↑ 6 from yesterday</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Leads this week</p>
+          <p class="metric-value">18</p>
+          <p class="metric-delta delta-up">↑ 3 from last week</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Bookings this month</p>
+          <p class="metric-value">47</p>
+          <p class="metric-delta delta-up">↑ 12 vs last month</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Conversion rate</p>
+          <p class="metric-value">38%</p>
+          <p class="metric-delta delta-up">↑ 4% improvement</p>
+        </div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-card">
+          <p class="chart-title">Conversations — last 14 days</p>
+          <div class="chart-placeholder">
+            <div class="bar" style="height:40%;background:#2a2840"></div>
+            <div class="bar" style="height:55%;background:#2a2840"></div>
+            <div class="bar" style="height:45%;background:#2a2840"></div>
+            <div class="bar" style="height:70%;background:#2a2840"></div>
+            <div class="bar" style="height:60%;background:#2a2840"></div>
+            <div class="bar" style="height:80%;background:#3d3560"></div>
+            <div class="bar" style="height:90%;background:#3d3560"></div>
+            <div class="bar" style="height:65%;background:#2a2840"></div>
+            <div class="bar" style="height:75%;background:#2a2840"></div>
+            <div class="bar" style="height:85%;background:#2a2840"></div>
+            <div class="bar" style="height:70%;background:#2a2840"></div>
+            <div class="bar" style="height:95%;background:#6c5ce7"></div>
+            <div class="bar" style="height:88%;background:#6c5ce7"></div>
+            <div class="bar" style="height:100%;background:#6c5ce7"></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <p class="chart-title">Leads by channel</p>
+          <div style="padding:10px 0">
+            <div class="donut-placeholder" style="border-color:#1e1c26;border-top-color:#6c5ce7;border-right-color:#5dcaa5"></div>
+          </div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#6c5ce7"></div>Widget — 62%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#5dcaa5"></div>WhatsApp — 31%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f0c070"></div>SMS — 7%</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-header">
+        <p class="section-title">Recent leads</p>
+        <p class="see-all">See all →</p>
+      </div>
+      <div class="lead-list">
+        <div class="lead-row">
+          <div class="lead-avatar">AN</div>
+          <div><p class="lead-name">Ayesha Noor</p><p class="lead-sub">Haircut · asked about balayage</p></div>
+          <div class="lead-meta">
+            <span class="badge badge-wa">WhatsApp</span>
+            <span class="badge badge-booked">Booked</span>
+            <span class="time">2m ago</span>
+          </div>
+        </div>
+        <div class="lead-row">
+          <div class="lead-avatar">ZK</div>
+          <div><p class="lead-name">Zara Khan</p><p class="lead-sub">Facial · slot pending</p></div>
+          <div class="lead-meta">
+            <span class="badge badge-widget">Widget</span>
+            <span class="badge badge-pending">Pending</span>
+            <span class="time">18m ago</span>
+          </div>
+        </div>
+        <div class="lead-row">
+          <div class="lead-avatar">OM</div>
+          <div><p class="lead-name">Omar Malik</p><p class="lead-sub">Asked about bridal package pricing</p></div>
+          <div class="lead-meta">
+            <span class="badge badge-widget">Widget</span>
+            <span class="badge badge-new">New</span>
+            <span class="time">1h ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADS PAGE -->
+<div class="screen">
+  <div class="screen-label">03-B · Leads page — full list with slide-over</div>
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="logo-mark">B</div><span class="logo-text">BookBot</span></div>
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <div class="nav-item"><div class="nav-icon"></div>Overview</div>
+        <div class="nav-item active"><div class="nav-icon active"></div>Leads</div>
+        <div class="nav-item"><div class="nav-icon"></div>Bookings</div>
+        <div class="nav-item"><div class="nav-icon"></div>Analytics</div>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Configure</p>
+        <div class="nav-item"><div class="nav-icon"></div>AI Settings</div>
+        <div class="nav-item"><div class="nav-icon"></div>Calendar</div>
+        <div class="nav-item"><div class="nav-icon"></div>WhatsApp</div>
+        <div class="nav-item"><div class="nav-icon"></div>Embed Code</div>
+      </div>
+    </div>
+    <div class="main" style="padding:0;display:grid;grid-template-columns:1fr 300px">
+      <!-- Lead table -->
+      <div style="padding:20px;border-right:1px solid #1e1c24">
+        <div class="main-header" style="margin-bottom:14px">
+          <div><p class="page-title" style="font-size:16px">Leads</p><p class="page-sub">87 total · 18 new this week</p></div>
+          <button class="btn-primary" style="font-size:11px;padding:7px 12px">Export CSV</button>
+        </div>
+        <!-- Filters -->
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <input type="text" placeholder="Search name, phone, email..." style="background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:7px 12px;font-size:12px;color:#e8e6f0;font-family:'DM Sans',sans-serif;outline:none;flex:1">
+          <select style="background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:7px 10px;font-size:12px;color:#9896a8;font-family:'DM Sans',sans-serif;outline:none"><option>All status</option><option>New</option><option>Booked</option></select>
+          <select style="background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:7px 10px;font-size:12px;color:#9896a8;font-family:'DM Sans',sans-serif;outline:none"><option>All channels</option><option>Widget</option><option>WhatsApp</option></select>
+        </div>
+        <!-- Table -->
+        <div style="background:#111014;border:1px solid #1e1c24;border-radius:8px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 80px 80px 60px;gap:8px;padding:8px 12px;border-bottom:1px solid #1e1c24">
+            <span style="font-size:10px;color:#45434f;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace">Name</span>
+            <span style="font-size:10px;color:#45434f;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace">Contact</span>
+            <span style="font-size:10px;color:#45434f;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace">Last message</span>
+            <span style="font-size:10px;color:#45434f;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace">Channel</span>
+            <span style="font-size:10px;color:#45434f;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace">Status</span>
+            <span style="font-size:10px;color:#45434f;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace">When</span>
+          </div>
+          <!-- Selected row -->
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 80px 80px 60px;gap:8px;padding:9px 12px;border-bottom:1px solid #1e1c24;background:#1e1c30;cursor:pointer">
+            <div style="display:flex;align-items:center;gap:7px"><div class="lead-avatar" style="width:24px;height:24px;font-size:9px">AN</div><span style="font-size:12px;color:#e8e6f0;font-weight:500">Ayesha Noor</span></div>
+            <span style="font-size:11px;color:#7a7890">0300-1234567</span>
+            <span style="font-size:11px;color:#55535f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Can I book Sat 10am?</span>
+            <span class="badge badge-wa" style="width:fit-content">WhatsApp</span>
+            <span class="badge badge-booked" style="width:fit-content">Booked</span>
+            <span class="time">2m</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 80px 80px 60px;gap:8px;padding:9px 12px;border-bottom:1px solid #1e1c24;cursor:pointer">
+            <div style="display:flex;align-items:center;gap:7px"><div class="lead-avatar" style="width:24px;height:24px;font-size:9px;background:#1a2e22;color:#5dcaa5">ZK</div><span style="font-size:12px;color:#c8c6d8">Zara Khan</span></div>
+            <span style="font-size:11px;color:#7a7890">0321-9876543</span>
+            <span style="font-size:11px;color:#55535f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">What's the facial price?</span>
+            <span class="badge badge-widget" style="width:fit-content">Widget</span>
+            <span class="badge badge-pending" style="width:fit-content">Pending</span>
+            <span class="time">18m</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 80px 80px 60px;gap:8px;padding:9px 12px;border-bottom:1px solid #1e1c24;cursor:pointer">
+            <div style="display:flex;align-items:center;gap:7px"><div class="lead-avatar" style="width:24px;height:24px;font-size:9px;background:#1a2040;color:#7aabf5">OM</div><span style="font-size:12px;color:#c8c6d8">Omar Malik</span></div>
+            <span style="font-size:11px;color:#7a7890">0333-5554444</span>
+            <span style="font-size:11px;color:#55535f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Bridal package details?</span>
+            <span class="badge badge-widget" style="width:fit-content">Widget</span>
+            <span class="badge badge-new" style="width:fit-content">New</span>
+            <span class="time">1h</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 80px 80px 60px;gap:8px;padding:9px 12px;cursor:pointer;opacity:.7">
+            <div style="display:flex;align-items:center;gap:7px"><div class="lead-avatar" style="width:24px;height:24px;font-size:9px;background:#2e2010;color:#f0c070">SA</div><span style="font-size:12px;color:#c8c6d8">Sara Ahmed</span></div>
+            <span style="font-size:11px;color:#7a7890">0345-7778888</span>
+            <span style="font-size:11px;color:#55535f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Do you do home service?</span>
+            <span class="badge badge-wa" style="width:fit-content">WhatsApp</span>
+            <span class="badge badge-new" style="width:fit-content">New</span>
+            <span class="time">3h</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#45434f;margin-top:8px;text-align:center">Showing 4 of 87 leads · Page 1 of 5</p>
+      </div>
+      <!-- Slide-over panel -->
+      <div style="background:#111014;padding:16px;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <p style="font-size:13px;font-weight:600;color:#f0eeff">Ayesha Noor</p>
+          <div style="width:18px;height:18px;background:#2e2c3a;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#9896a8">✕</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+          <span class="badge badge-wa">WhatsApp</span>
+          <span class="badge badge-booked">Booked</span>
+          <span style="font-size:10px;color:#55535f;padding:2px 7px">0300-1234567</span>
+        </div>
+        <div style="background:#1a1820;border-radius:8px;padding:10px;margin-bottom:12px">
+          <p style="font-size:10px;color:#55535f;margin-bottom:6px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Conversation</p>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:#2a1f4a;border-radius:8px 8px 8px 2px;padding:6px 10px;align-self:flex-start;max-width:85%">
+              <p style="font-size:11px;color:#c8c6d8">Hi, what's the price for balayage?</p>
+              <p style="font-size:9px;color:#6b5fa0;margin-top:2px">2:14 PM</p>
+            </div>
+            <div style="background:#1e1c26;border-radius:8px 8px 2px 8px;padding:6px 10px;align-self:flex-end;max-width:85%">
+              <p style="font-size:11px;color:#9b8cf5">Balayage starts at Rs. 8,000. Full head is Rs. 12,000 with a toner. Would you like to book?</p>
+              <p style="font-size:9px;color:#55535f;margin-top:2px">2:14 PM · AI</p>
+            </div>
+            <div style="background:#2a1f4a;border-radius:8px 8px 8px 2px;padding:6px 10px;align-self:flex-start;max-width:85%">
+              <p style="font-size:11px;color:#c8c6d8">Yes! Can I book Saturday 10am?</p>
+              <p style="font-size:9px;color:#6b5fa0;margin-top:2px">2:15 PM</p>
+            </div>
+            <div style="background:#1e1c26;border-radius:8px 8px 2px 8px;padding:6px 10px;align-self:flex-end;max-width:85%">
+              <p style="font-size:11px;color:#9b8cf5">Saturday 10:00 AM is available! Your name?</p>
+              <p style="font-size:9px;color:#55535f;margin-top:2px">2:15 PM · AI</p>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+          <button style="background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:7px 12px;font-size:11px;color:#9b8cf5;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left">Send follow-up message</button>
+          <div style="display:flex;gap:6px">
+            <select style="flex:1;background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:6px 10px;font-size:11px;color:#9896a8;font-family:'DM Sans',sans-serif;outline:none"><option>Mark as Booked ✓</option><option>Mark as New</option><option>Mark as Lost</option></select>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:10px;color:#55535f;margin-bottom:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Notes</p>
+          <textarea style="width:100%;background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:8px 10px;font-size:11px;color:#e8e6f0;font-family:'DM Sans',sans-serif;outline:none;resize:none;min-height:60px" placeholder="Add a private note..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

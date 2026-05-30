@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookBot — Settings & Billing</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0f0f11;color:#e8e6f0;min-height:100vh;padding:32px 20px}
+.page-label{font-family:'DM Mono',monospace;font-size:11px;color:#6b6880;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px;text-align:center}
+.screens{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:1200px;margin:0 auto;margin-bottom:28px}
+.screen{background:#16151a;border:1px solid #2a2830;border-radius:16px;overflow:hidden}
+.screen-full{background:#16151a;border:1px solid #2a2830;border-radius:16px;overflow:hidden;max-width:1200px;margin:0 auto 28px}
+.screen-label{font-family:'DM Mono',monospace;font-size:10px;color:#6b6880;letter-spacing:.1em;padding:10px 16px;border-bottom:1px solid #1e1c24;background:#121117}
+.app-shell{display:grid;grid-template-columns:200px 1fr;min-height:520px}
+.sidebar{background:#111014;border-right:1px solid #1e1c24;padding:16px 0}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 16px 16px;border-bottom:1px solid #1e1c24;margin-bottom:8px}
+.logo-mark{width:28px;height:28px;background:#6c5ce7;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:#e8e6f0}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:12px;color:#7a7890;cursor:pointer}
+.nav-item.active{background:#1e1c30;color:#9b8cf5;border-right:2px solid #6c5ce7}
+.nav-icon{width:14px;height:14px;border-radius:3px;background:#2e2c3a;flex-shrink:0}
+.nav-icon.active{background:#6c5ce7}
+.nav-label{font-size:10px;color:#45434f;font-family:'DM Mono',monospace;letter-spacing:.1em;padding:4px 16px 6px;text-transform:uppercase}
+.main{padding:20px}
+.page-title{font-size:16px;font-weight:600;color:#f0eeff;margin-bottom:4px}
+.page-sub{font-size:12px;color:#7a7890;margin-bottom:20px}
+/* Tabs */
+.tabs{display:flex;gap:2px;background:#111014;border-radius:8px;padding:3px;margin-bottom:20px;width:fit-content}
+.tab{padding:6px 14px;border-radius:6px;font-size:12px;color:#7a7890;cursor:pointer}
+.tab.active{background:#1e1c30;color:#9b8cf5;font-weight:500}
+/* Form */
+.form-group{margin-bottom:14px}
+label{display:block;font-size:11px;font-weight:500;color:#9896a8;margin-bottom:5px;letter-spacing:.02em}
+input,select,textarea{width:100%;background:#1a1820;border:1px solid #2a2830;border-radius:7px;padding:8px 12px;font-size:12px;color:#e8e6f0;font-family:'DM Sans',sans-serif;outline:none}
+textarea{resize:vertical;min-height:80px}
+input::placeholder,textarea::placeholder{color:#45434f}
+.btn-primary{background:#6c5ce7;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:500;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-secondary{background:#1a1820;border:1px solid #2a2830;border-radius:8px;padding:8px 14px;font-size:12px;color:#9896a8;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-danger{background:#2a1010;border:1px solid #5a2020;border-radius:8px;padding:8px 14px;font-size:12px;color:#e88080;cursor:pointer;font-family:'DM Sans',sans-serif}
+.section{background:#1a1820;border:1px solid #2a2830;border-radius:10px;padding:14px;margin-bottom:14px}
+.section-title{font-size:12px;font-weight:500;color:#9896a8;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e1c24}
+.toggle-row:last-child{border-bottom:none}
+.toggle-info{font-size:12px;color:#c8c6d8}
+.toggle-sub{font-size:10px;color:#55535f;margin-top:2px}
+.toggle{width:32px;height:18px;background:#6c5ce7;border-radius:9px;position:relative;cursor:pointer;flex-shrink:0}
+.toggle-off{background:#2e2c3a}
+/* Connected badge */
+.connected-badge{display:flex;align-items:center;gap:6px;background:#1a2e22;border:1px solid #2a4a34;border-radius:6px;padding:6px 10px;font-size:12px;color:#5dcaa5}
+.disconnected-badge{display:flex;align-items:center;gap:6px;background:#1a1820;border:1px solid #2a2830;border-radius:6px;padding:6px 10px;font-size:12px;color:#7a7890}
+/* Billing */
+.plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.plan{background:#111014;border:1px solid #2a2830;border-radius:10px;padding:12px;text-align:center}
+.plan.active-plan{border:1.5px solid #6c5ce7;background:#1a1830}
+.plan-name{font-size:13px;font-weight:600;color:#e8e6f0;margin-bottom:2px}
+.plan-price{font-size:22px;font-weight:600;color:#f0eeff;font-family:'DM Mono',monospace;margin:6px 0}
+.plan-price span{font-size:12px;font-weight:400;color:#7a7890}
+.plan-feature{font-size:10px;color:#7a7890;margin-bottom:3px}
+.plan-btn{width:100%;margin-top:10px;background:#1e1c26;border:1px solid #2e2c3a;border-radius:6px;padding:6px;font-size:11px;color:#9896a8;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan.active-plan .plan-btn{background:#6c5ce7;border-color:#6c5ce7;color:#fff}
+/* Usage bar */
+.usage-bar-bg{background:#1e1c26;border-radius:4px;height:6px;margin:6px 0}
+.usage-bar-fill{background:#6c5ce7;border-radius:4px;height:6px}
+/* Embed */
+.embed-box{background:#111014;border:1px solid #2a2830;border-radius:7px;padding:12px;font-family:'DM Mono',monospace;font-size:11px;color:#9b8cf5;line-height:1.8}
+</style>
+</head>
+<body>
+<p class="page-label">BookBot — Screen 04 / Settings & Billing</p>
+
+<div class="screens">
+
+  <!-- SETTINGS: AI CONFIG TAB -->
+  <div class="screen">
+    <div class="screen-label">04-A · Settings — AI config tab</div>
+    <div class="app-shell">
+      <div class="sidebar">
+        <div class="sidebar-logo"><div class="logo-mark">B</div><span class="logo-text">BookBot</span></div>
+        <div style="padding:8px 0">
+          <p class="nav-label">Main</p>
+          <div class="nav-item"><div class="nav-icon"></div>Overview</div>
+          <div class="nav-item"><div class="nav-icon"></div>Leads</div>
+          <div class="nav-item"><div class="nav-icon"></div>Bookings</div>
+          <div class="nav-item"><div class="nav-icon"></div>Analytics</div>
+          <p class="nav-label" style="margin-top:8px">Configure</p>
+          <div class="nav-item active"><div class="nav-icon active"></div>AI Settings</div>
+          <div class="nav-item"><div class="nav-icon"></div>Calendar</div>
+          <div class="nav-item"><div class="nav-icon"></div>WhatsApp</div>
+          <div class="nav-item"><div class="nav-icon"></div>Embed Code</div>
+        </div>
+      </div>
+      <div class="main">
+        <p class="page-title">AI Settings</p>
+        <p class="page-sub">Configure how your AI assistant behaves</p>
+        <div class="tabs">
+          <div class="tab">General</div>
+          <div class="tab active">AI Config</div>
+          <div class="tab">Hours</div>
+          <div class="tab">Embed</div>
+        </div>
+        <div class="form-group">
+          <label>Welcome message</label>
+          <input type="text" value="Hi! I'm Bella 👋 How can I help you today?">
+        </div>
+        <div class="form-group">
+          <label>AI personality (system prompt)</label>
+          <textarea>You are Bella, a friendly assistant for Glow Salon & Spa. Only answer questions about our salon's services, pricing, and bookings. Always be warm and professional. If asked about something unrelated to the salon, politely redirect.</textarea>
+        </div>
+        <div class="section">
+          <p class="section-title">Lead capture</p>
+          <div class="toggle-row">
+            <div><p class="toggle-info">Collect customer name</p></div>
+            <div class="toggle"></div>
+          </div>
+          <div class="toggle-row">
+            <div><p class="toggle-info">Collect phone number</p></div>
+            <div class="toggle"></div>
+          </div>
+          <div class="toggle-row">
+            <div><p class="toggle-info">Collect email address</p></div>
+            <div class="toggle toggle-off"></div>
+          </div>
+        </div>
+        <div class="section">
+          <p class="section-title">Knowledge base <span style="font-size:11px;color:#55535f;font-family:'DM Mono',monospace">12 chunks</span></p>
+          <textarea style="min-height:70px" placeholder="Paste your services, prices, FAQs here...">Haircut (ladies): Rs. 1,500
+Balayage: Rs. 8,000–12,000
+Facial: Rs. 2,500
+Home service available in DHA only...</textarea>
+          <button class="btn-primary" style="margin-top:8px;font-size:11px;padding:6px 14px">Save & re-train AI</button>
+        </div>
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS: CALENDAR TAB -->
+  <div class="screen">
+    <div class="screen-label">04-B · Settings — Calendar tab</div>
+    <div class="app-shell">
+      <div class="sidebar">
+        <div class="sidebar-logo"><div class="logo-mark">B</div><span class="logo-text">BookBot</span></div>
+        <div style="padding:8px 0">
+          <p class="nav-label">Main</p>
+          <div class="nav-item"><div class="nav-icon"></div>Overview</div>
+          <div class="nav-item"><div class="nav-icon"></div>Leads</div>
+          <div class="nav-item"><div class="nav-icon"></div>Bookings</div>
+          <div class="nav-item"><div class="nav-icon"></div>Analytics</div>
+          <p class="nav-label" style="margin-top:8px">Configure</p>
+          <div class="nav-item"><div class="nav-icon"></div>AI Settings</div>
+          <div class="nav-item active"><div class="nav-icon active"></div>Calendar</div>
+          <div class="nav-item"><div class="nav-icon"></div>WhatsApp</div>
+          <div class="nav-item"><div class="nav-icon"></div>Embed Code</div>
+        </div>
+      </div>
+      <div class="main">
+        <p class="page-title">Calendar</p>
+        <p class="page-sub">Connect your calendar to enable booking</p>
+
+        <div class="section">
+          <p class="section-title">Google Calendar</p>
+          <div class="connected-badge" style="margin-bottom:12px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#5dcaa5"></div>
+            Connected · ayesha@glowsalon.com
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-secondary" style="font-size:11px;padding:6px 12px">Reconnect</button>
+            <button class="btn-danger" style="font-size:11px;padding:6px 12px">Disconnect</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <p class="section-title">Cal.com integration</p>
+          <div class="disconnected-badge" style="margin-bottom:12px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#45434f"></div>
+            Not connected
+          </div>
+          <button class="btn-primary" style="font-size:11px;padding:7px 14px">Connect Cal.com →</button>
+        </div>
+
+        <div class="section">
+          <p class="section-title">Booking settings</p>
+          <div class="form-group">
+            <label>Appointment duration</label>
+            <select><option>30 minutes</option><option selected>45 minutes</option><option>60 minutes</option><option>90 minutes</option></select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Buffer between appointments</label>
+            <select><option>None</option><option selected>15 minutes</option><option>30 minutes</option></select>
+          </div>
+        </div>
+
+        <div class="section">
+          <p class="section-title">WhatsApp Channel</p>
+          <div class="disconnected-badge" style="margin-bottom:12px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#45434f"></div>
+            Not connected
+          </div>
+          <div style="background:#1e1820;border-radius:7px;padding:10px;font-size:11px;color:#7a7890;line-height:1.6;margin-bottom:10px">
+            <strong style="color:#9896a8">Setup steps:</strong><br>
+            1. Create Meta Business account<br>
+            2. Register a WhatsApp phone number<br>
+            3. Paste your Phone Number ID below
+          </div>
+          <div class="form-group">
+            <label>WhatsApp Phone Number ID</label>
+            <input placeholder="123456789012345">
+          </div>
+          <button class="btn-primary" style="font-size:11px;padding:7px 14px">Save & verify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BILLING PAGE FULL WIDTH -->
+<div class="screen-full">
+  <div class="screen-label">04-C · Billing page</div>
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="logo-mark">B</div><span class="logo-text">BookBot</span></div>
+      <div style="padding:8px 0">
+        <p class="nav-label">Main</p>
+        <div class="nav-item"><div class="nav-icon"></div>Overview</div>
+        <div class="nav-item"><div class="nav-icon"></div>Leads</div>
+        <div class="nav-item"><div class="nav-icon"></div>Bookings</div>
+        <div class="nav-item"><div class="nav-icon"></div>Analytics</div>
+        <p class="nav-label" style="margin-top:8px">Account</p>
+        <div class="nav-item active"><div class="nav-icon active"></div>Billing</div>
+        <div class="nav-item"><div class="nav-icon"></div>Settings</div>
+      </div>
+    </div>
+    <div class="main">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+        <div>
+          <p class="page-title">Billing</p>
+          <p class="page-sub">You're on the <strong style="color:#9b8cf5">Starter plan</strong> · Renews Jan 15, 2027</p>
+        </div>
+        <button class="btn-secondary" style="font-size:11px">Manage subscription →</button>
+      </div>
+
+      <!-- Usage -->
+      <div class="section" style="margin-bottom:20px">
+        <p class="section-title">Usage this month</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+              <span style="color:#9896a8">Conversations</span>
+              <span style="color:#e8e6f0;font-family:'DM Mono',monospace">642 / 1,000</span>
+            </div>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:64%"></div></div>
+            <p style="font-size:10px;color:#55535f;margin-top:3px">358 remaining</p>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+              <span style="color:#9896a8">Leads captured</span>
+              <span style="color:#e8e6f0;font-family:'DM Mono',monospace">87 total</span>
+            </div>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:100%;background:#5dcaa5"></div></div>
+            <p style="font-size:10px;color:#55535f;margin-top:3px">Unlimited</p>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+              <span style="color:#9896a8">WhatsApp messages</span>
+              <span style="color:#e8e6f0;font-family:'DM Mono',monospace">234 sent</span>
+            </div>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:23%;background:#f0c070"></div></div>
+            <p style="font-size:10px;color:#55535f;margin-top:3px">Pay-per-use via Meta</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plans -->
+      <p style="font-size:12px;font-weight:500;color:#9896a8;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;margin-bottom:10px">Plans</p>
+      <div class="plan-grid">
+        <div class="plan">
+          <p class="plan-name">Free</p>
+          <p class="plan-price">$0<span>/mo</span></p>
+          <p class="plan-feature">100 conversations</p>
+          <p class="plan-feature">Widget only</p>
+          <p class="plan-feature">BookBot branding</p>
+          <p class="plan-feature" style="color:#45434f">No WhatsApp</p>
+          <button class="plan-btn" style="color:#55535f">Current free tier</button>
+        </div>
+        <div class="plan active-plan">
+          <div style="font-size:9px;background:#6c5ce7;color:#fff;border-radius:4px;padding:2px 6px;margin-bottom:6px;width:fit-content;margin-left:auto;margin-right:auto">CURRENT</div>
+          <p class="plan-name">Starter</p>
+          <p class="plan-price">$29<span>/mo</span></p>
+          <p class="plan-feature">1,000 conversations</p>
+          <p class="plan-feature">Widget + WhatsApp</p>
+          <p class="plan-feature">BookBot branding</p>
+          <p class="plan-feature">Email support</p>
+          <button class="plan-btn">Current plan</button>
+        </div>
+        <div class="plan">
+          <p class="plan-name">Growth</p>
+          <p class="plan-price">$79<span>/mo</span></p>
+          <p class="plan-feature">5,000 conversations</p>
+          <p class="plan-feature">Widget + WhatsApp + SMS</p>
+          <p class="plan-feature">Remove branding</p>
+          <p class="plan-feature">Priority support</p>
+          <button class="plan-btn" style="background:#6c5ce7;border-color:#6c5ce7;color:#fff">Upgrade →</button>
+        </div>
+        <div class="plan">
+          <p class="plan-name">Pro</p>
+          <p class="plan-price">$149<span>/mo</span></p>
+          <p class="plan-feature">Unlimited conversations</p>
+          <p class="plan-feature">All channels</p>
+          <p class="plan-feature">White-label</p>
+          <p class="plan-feature">Dedicated support</p>
+          <button class="plan-btn" style="background:#6c5ce7;border-color:#6c5ce7;color:#fff">Upgrade →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
